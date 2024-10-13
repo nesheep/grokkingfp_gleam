@@ -2,15 +2,10 @@ import gleam/result
 import gleam/string
 
 pub fn abbreviate(s: String) -> Result(String, Nil) {
-  use #(a, b) <- result.try(case s |> string.split(" ") {
-    [a, b] -> Ok(#(a, b))
-    _ -> Error(Nil)
-  })
-
-  use #(a_initial, b) <- result.try(case string.first(a), string.is_empty(b) {
-    Ok(a_initial), False -> Ok(#(a_initial, b))
-    _, _ -> Error(Nil)
-  })
-
-  Ok(a_initial <> ". " <> b)
+  use #(a, b) <- result.try(s |> string.split_once(" "))
+  use a_initial <- result.try(a |> string.first)
+  case b |> string.is_empty {
+    True -> Error(Nil)
+    False -> Ok(a_initial <> ". " <> b)
+  }
 }

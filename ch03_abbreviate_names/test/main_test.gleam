@@ -13,11 +13,11 @@ pub fn abbreviate_test() {
     #("Alonzo Church", Ok("A. Church")),
     #("A. Church", Ok("A. Church")),
     #("A Church", Ok("A. Church")),
+    #("Alonzo Church Taro", Ok("A. Church Taro")),
     #("", Error(Nil)),
     #(" ", Error(Nil)),
     #(" Church", Error(Nil)),
     #("Alonzo ", Error(Nil)),
-    #("Alonzo Church Taro", Error(Nil)),
   ]
   |> list.each(fn(t) { f(t.0) |> should.equal(t.1) })
 }
