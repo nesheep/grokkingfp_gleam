@@ -1,3 +1,4 @@
+import gleam/int
 import gleam/list
 import gleam/string
 import gleeunit
@@ -54,4 +55,28 @@ pub fn map_double_test() {
   [5, 1, 2, 4, 3]
   |> list.map(fn(x) { x * 2 })
   |> should.equal([10, 2, 4, 8, 6])
+}
+
+pub fn total_test() {
+  [5, 1, 2, 4, 100]
+  |> list.fold(0, int.add)
+  |> should.equal(112)
+}
+
+pub fn total_len_test() {
+  ["scala", "rust", "ada"]
+  |> list.fold(0, fn(acc, x) { acc + string.length(x) })
+  |> should.equal(12)
+}
+
+pub fn total_s_test() {
+  ["scala", "haskell", "rust", "ada"]
+  |> list.fold(0, fn(acc, x) { acc + main.number_of_s(x) })
+  |> should.equal(3)
+}
+
+pub fn max_test() {
+  [5, 1, 2, 4, 15]
+  |> list.reduce(int.max)
+  |> should.equal(Ok(15))
 }
