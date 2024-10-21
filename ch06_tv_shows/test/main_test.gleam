@@ -13,6 +13,7 @@ pub fn parse_show_test() {
     #("Breaking Bad (2008-2013)", Ok(TvShow("Breaking Bad", 2008, 2013))),
     #("Mad Men (2007-2015)", Ok(TvShow("Mad Men", 2007, 2015))),
     #("Scrubs (2001-2010)", Ok(TvShow("Scrubs", 2001, 2010))),
+    #("Chernobyl (2019)", Ok(TvShow("Chernobyl", 2019, 2019))),
     #("The Wire aired from 2002 to 2008", Error(Nil)),
     #("Breaking Bad ()", Error(Nil)),
     #("()", Error(Nil)),

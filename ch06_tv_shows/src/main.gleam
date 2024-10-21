@@ -27,10 +27,25 @@ fn extract_year_end(raw_show: String) -> Result(Int, Nil) {
   int.parse(s)
 }
 
+fn extract_single_year(raw_show: String) -> Result(Int, Nil) {
+  use #(_, s) <- result.try(string.split_once(raw_show, "("))
+  use #(s, _) <- result.try(string.split_once(s, ")"))
+  case string.starts_with(s, "-") {
+    True -> Error(Nil)
+    False -> int.parse(s)
+  }
+}
+
 pub fn parse_show(raw_show: String) -> Result(TvShow, Nil) {
   use title <- result.try(extract_title(raw_show))
-  use start <- result.try(extract_year_start(raw_show))
-  use end <- result.try(extract_year_end(raw_show))
+  use start <- result.try(
+    extract_year_start(raw_show)
+    |> result.try_recover(fn(_) { extract_single_year(raw_show) }),
+  )
+  use end <- result.try(
+    extract_year_end(raw_show)
+    |> result.try_recover(fn(_) { extract_single_year(raw_show) }),
+  )
   Ok(TvShow(title:, start:, end:))
 }
 
