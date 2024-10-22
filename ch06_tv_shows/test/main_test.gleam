@@ -1,7 +1,7 @@
 import gleam/list
 import gleeunit
 import gleeunit/should
-import main.{TvShow}
+import main.{ExtractSingleYearError, ExtractTitleError, ParseIntError, TvShow}
 
 pub fn main() {
   gleeunit.main()
@@ -14,13 +14,25 @@ pub fn parse_show_test() {
     #("Mad Men (2007-2015)", Ok(TvShow("Mad Men", 2007, 2015))),
     #("Scrubs (2001-2010)", Ok(TvShow("Scrubs", 2001, 2010))),
     #("Chernobyl (2019)", Ok(TvShow("Chernobyl", 2019, 2019))),
-    #("The Wire aired from 2002 to 2008", Error(Nil)),
-    #("Breaking Bad ()", Error(Nil)),
-    #("()", Error(Nil)),
-    #(") - (Breaking Bad, 2008-2013", Error(Nil)),
-    #("Mad Men (-2015)", Error(Nil)),
-    #("The Wire ( 2002 - 2008 )", Error(Nil)),
-    #("Stranger Things (2016-)", Error(Nil)),
+    #(
+      "The Wire aired from 2002 to 2008",
+      Error(ExtractTitleError("The Wire aired from 2002 to 2008")),
+    ),
+    #("Breaking Bad ()", Error(ParseIntError(""))),
+    #("()", Error(ParseIntError(""))),
+    #(
+      ") - (Breaking Bad, 2008-2013",
+      Error(ExtractSingleYearError(") - (Breaking Bad, 2008-2013")),
+    ),
+    #("Mad Men (-2015)", Error(ExtractSingleYearError("Mad Men (-2015)"))),
+    #(
+      "The Wire ( 2002 - 2008 )",
+      Error(ExtractSingleYearError("The Wire ( 2002 - 2008 )")),
+    ),
+    #(
+      "Stranger Things (2016-)",
+      Error(ExtractSingleYearError("Stranger Things (2016-)")),
+    ),
   ]
   |> list.each(fn(t) { main.parse_show(t.0) |> should.equal(t.1) })
 }
@@ -51,7 +63,7 @@ pub fn parse_shows_test() {
         ") - (Breaking Bad, 2008-2013", "Mad Men (-2015)",
         "The Wire ( 2002 - 2008 )", "Stranger Things (2016-)",
       ],
-      Error(Nil),
+      Error(ExtractTitleError("The Wire aired from 2002 to 2008")),
     ),
     #(
       [
