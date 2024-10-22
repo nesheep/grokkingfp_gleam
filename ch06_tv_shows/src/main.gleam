@@ -1,7 +1,5 @@
 import gleam/int
-import gleam/io
 import gleam/list
-import gleam/pair
 import gleam/result
 import gleam/string
 
@@ -40,11 +38,11 @@ pub fn parse_show(raw_show: String) -> Result(TvShow, Nil) {
   use title <- result.try(extract_title(raw_show))
   use start <- result.try(
     extract_year_start(raw_show)
-    |> result.try_recover(fn(_) { extract_single_year(raw_show) }),
+    |> result.lazy_or(fn() { extract_single_year(raw_show) }),
   )
   use end <- result.try(
     extract_year_end(raw_show)
-    |> result.try_recover(fn(_) { extract_single_year(raw_show) }),
+    |> result.lazy_or(fn() { extract_single_year(raw_show) }),
   )
   Ok(TvShow(title:, start:, end:))
 }
@@ -52,9 +50,23 @@ pub fn parse_show(raw_show: String) -> Result(TvShow, Nil) {
 pub fn parse_shows_best_effort(raw_shows: List(String)) -> List(TvShow) {
   raw_shows
   |> list.map(parse_show)
-  |> result.partition
-  |> pair.first
-  |> list.reverse
+  |> result.values
+}
+
+pub fn add_or_resign(
+  parsed_shows: Result(List(TvShow), Nil),
+  new_parsed_show: Result(TvShow, Nil),
+) -> Result(List(TvShow), Nil) {
+  use parsed_shows <- result.try(parsed_shows)
+  use new_parsed_show <- result.try(new_parsed_show)
+  Ok([new_parsed_show, ..parsed_shows])
+}
+
+pub fn parse_shows(raw_shows: List(String)) -> Result(List(TvShow), Nil) {
+  raw_shows
+  |> list.map(parse_show)
+  |> list.fold(Ok([]), add_or_resign)
+  |> result.map(list.reverse)
 }
 
 fn sort_by(list: List(a), by score: fn(a) -> Int) -> List(a) {
@@ -65,8 +77,4 @@ pub fn sort_shows(shows: List(TvShow)) -> List(TvShow) {
   shows
   |> sort_by(fn(x) { x.end - x.start })
   |> list.reverse
-}
-
-pub fn main() {
-  io.println("Hello from main!")
 }
