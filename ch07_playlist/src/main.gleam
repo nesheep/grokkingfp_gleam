@@ -34,20 +34,19 @@ pub fn gather_songs(
   artist: Artist,
   genre: MusicGenre,
 ) -> List(Song) {
-  list.flat_map(playlists, fn(playlist) {
-    case playlist.kind {
-      CuratedByUser(_) ->
-        playlist.songs |> list.filter(fn(s) { s.artist == artist })
-      BasedOnArtist(a) ->
-        case a == artist {
-          True -> playlist.songs
-          False -> []
-        }
-      BasedOnGenres(gs) ->
-        case set.contains(gs, genre) {
-          True -> playlist.songs
-          False -> []
-        }
-    }
-  })
+  use playlist <- list.flat_map(playlists)
+  case playlist.kind {
+    CuratedByUser(_) ->
+      playlist.songs |> list.filter(fn(s) { s.artist == artist })
+    BasedOnArtist(a) ->
+      case a == artist {
+        True -> playlist.songs
+        False -> []
+      }
+    BasedOnGenres(gs) ->
+      case set.contains(gs, genre) {
+        True -> playlist.songs
+        False -> []
+      }
+  }
 }

@@ -1,20 +1,20 @@
-# app
+# main
 
-[![Package Version](https://img.shields.io/hexpm/v/app)](https://hex.pm/packages/app)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/app/)
+[![Package Version](https://img.shields.io/hexpm/v/main)](https://hex.pm/packages/main)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-ffaff3)](https://hexdocs.pm/main/)
 
 ```sh
-gleam add app@1
+gleam add main@1
 ```
 ```gleam
-import app
+import main
 
 pub fn main() {
   // TODO: An example of the project in use
 }
 ```
 
-Further documentation can be found at <https://hexdocs.pm/app>.
+Further documentation can be found at <https://hexdocs.pm/main>.
 
 ## Development
 
