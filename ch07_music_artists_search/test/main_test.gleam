@@ -2,8 +2,8 @@ import gleam/list
 import gleeunit
 import gleeunit/should
 import main.{
-  type Artist, ActiveBetween, Artist, HardRock, HeavyMetal, Location, Pop,
-  StillActive, active_length,
+  type Artist, ActiveInPast, Artist, HardRock, HeavyMetal, Location,
+  PeriodInYears, Pop, StillActive, active_length,
 }
 
 pub fn main() {
@@ -26,7 +26,7 @@ pub fn active_length_test() {
           "Metallica",
           HeavyMetal,
           Location("U.S."),
-          StillActive(1981),
+          StillActive(1981, []),
         ),
         current_year: 2022,
       ),
@@ -38,7 +38,7 @@ pub fn active_length_test() {
           "Led Zeppelin",
           HardRock,
           Location("England"),
-          ActiveBetween(1968, 1980),
+          ActiveInPast([PeriodInYears(1968, 1980)]),
         ),
         current_year: 2022,
       ),
@@ -50,7 +50,7 @@ pub fn active_length_test() {
           "Bee Gees",
           Pop,
           Location("England"),
-          ActiveBetween(1958, 2003),
+          ActiveInPast([PeriodInYears(1958, 2003)]),
         ),
         current_year: 2022,
       ),
